@@ -11,7 +11,7 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class UsersService {
-  private cognitoClient = new CognitoIdentityProviderClient({ region: process.env.COGNITO_CLIENT_ID });
+  private cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
