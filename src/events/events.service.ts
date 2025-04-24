@@ -54,7 +54,7 @@ export class EventsService {
     startDate?: string,
     page = 1,
     limit = 10,
-  ): Promise<{ data: Event[]; total: number }> {
+  ): Promise<{ data: Array<Record<string, any> & { availablePercentage: number }>; total: number }> {
     const filter: any = {};
   
     if (title) filter.title = { $regex: title, $options: 'i' };
@@ -63,12 +63,26 @@ export class EventsService {
     if (startDate) filter.startDate = { $gte: new Date(startDate) };
   
     const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
+  
+    const [events, total] = await Promise.all([
       this.eventModel.find(filter).skip(skip).limit(limit),
       this.eventModel.countDocuments(filter),
     ]);
   
-    return { data, total };
-  }
+    const data = events.map((event) => {
+      const plain = event.toObject();
+      const availablePercentage = Math.max(
+        0,
+        Math.round(
+          ((plain.attendeesCapacity - plain.reservations) / plain.attendeesCapacity) * 100
+        )
+      );
+      return {
+        ...plain,
+        availablePercentage,
+      };
+    });
   
+    return { data, total };
+  }    
 }
