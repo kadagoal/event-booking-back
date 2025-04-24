@@ -9,4 +9,5 @@ export class CreateEventDto {
   @IsString() location: string;
   @IsString() image: string;
   @IsNumber() attendeesCapacity: number;
+  @IsString() label: string;
 }
