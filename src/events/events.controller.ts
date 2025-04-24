@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Query, Req } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CognitoAuthGuard } from 'src/common/auth/cognito-auth.guard';
@@ -10,8 +10,17 @@ export class EventsController {
 
   @Post()
   @UseGuards(CognitoAuthGuard)
-  create(@Body() createEventDto: CreateEventDto) {
-    return this.eventsService.create(createEventDto);
+  create(@Body() createEventDto: CreateEventDto, @Req() req) {
+
+    console.log(req.user.sub);
+
+    return this.eventsService.create(createEventDto, req.user.sub);
+  }
+  
+  @Get('my-events')
+  @UseGuards(CognitoAuthGuard)
+  findMyEvents(@Req() req) {
+    return this.eventsService.findByCreator(req.user.sub);
   }
 
 

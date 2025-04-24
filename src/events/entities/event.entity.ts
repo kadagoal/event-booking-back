@@ -14,5 +14,7 @@ export class Event extends Document {
   @Prop({ default: 0 }) reservations: number;
   @Prop({ default: 0 }) soldPercentage: number;
   @Prop() label: string;
+  @Prop({ required: true }) createdBy: string;
+
 }
 export const EventSchema = SchemaFactory.createForClass(Event);
