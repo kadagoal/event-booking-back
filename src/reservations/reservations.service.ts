@@ -23,7 +23,10 @@ export class ReservationsService {
   }
 
   async findByUser(userId: string): Promise<Reservation[]> {
-    return this.reservationModel.find({ userId });
+    return this.reservationModel
+      .find({ userId })
+      .populate('eventId')
+      .exec();
   }
 
   async delete(reservationId: string, userId: string): Promise<{ message: string }> {
