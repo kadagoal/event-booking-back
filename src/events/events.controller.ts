@@ -11,9 +11,6 @@ export class EventsController {
   @Post()
   @UseGuards(CognitoAuthGuard)
   create(@Body() createEventDto: CreateEventDto, @Req() req) {
-
-    console.log(req.user.sub);
-
     return this.eventsService.create(createEventDto, req.user.sub);
   }
   

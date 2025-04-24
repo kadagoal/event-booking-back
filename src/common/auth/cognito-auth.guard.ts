@@ -69,7 +69,6 @@ import {
   
         return true;
       } catch (err) {
-        console.error('Error al verificar el token:', err);
         throw new UnauthorizedException('Token inválido o expirado.');
       }
     }

@@ -137,7 +137,6 @@ export class UsersService {
         role: user?.role,
       };
     } catch (error) {
-      console.log(error);
       if (error.name === 'UserNotConfirmedException') {
         throw new BadRequestException('El usuario aún no ha confirmado su cuenta.');
       }

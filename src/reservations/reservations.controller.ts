@@ -21,7 +21,6 @@ export class ReservationsController {
 
   @Delete(':id')
   async delete(@Param('id') id: string, @Req() req) {
-    console.log("entrooo")
     return this.reservationsService.delete(id, req.user.sub);
   }
 

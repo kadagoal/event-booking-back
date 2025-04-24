@@ -9,7 +9,6 @@ export class EventsService {
   constructor(@InjectModel(Event.name) private readonly eventModel: Model<Event>) {}
 
   async create(createEventDto: CreateEventDto, userId: string): Promise<Event> {
-    console.log(userId)
     const event = new this.eventModel({
       ...createEventDto,
       createdBy: userId,
