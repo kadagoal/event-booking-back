@@ -46,7 +46,6 @@ export class EventsService {
     if (!updatedEvent) throw new Error('Evento no encontrado');
     return updatedEvent;
   }
-
   async search(
     title?: string,
     category?: string,
@@ -54,7 +53,7 @@ export class EventsService {
     startDate?: string,
     page = 1,
     limit = 10,
-  ): Promise<{ data: Array<Record<string, any> & { availablePercentage: number }>; total: number }> {
+  ): Promise<{ data: Array<Record<string, any> & { availablePercentage: number; quantityAvailable: number }>; total: number }> {
     const filter: any = {};
   
     if (title) filter.title = { $regex: title, $options: 'i' };
@@ -71,18 +70,16 @@ export class EventsService {
   
     const data = events.map((event) => {
       const plain = event.toObject();
-      const availablePercentage = Math.max(
-        0,
-        Math.round(
-          ((plain.attendeesCapacity - plain.reservations) / plain.attendeesCapacity) * 100
-        )
-      );
+      const quantityAvailable = Math.max(0, plain.attendeesCapacity - plain.reservations);
+      const availablePercentage = Math.round((quantityAvailable / plain.attendeesCapacity) * 100);
+  
       return {
         ...plain,
+        quantityAvailable,
         availablePercentage,
       };
     });
   
     return { data, total };
-  }    
-}
+  }
+  }
