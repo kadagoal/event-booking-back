@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EventsService } from '../events/events.service';
@@ -24,5 +24,20 @@ export class ReservationsService {
 
   async findByUser(userId: string): Promise<Reservation[]> {
     return this.reservationModel.find({ userId });
+  }
+
+  async delete(reservationId: string, userId: string): Promise<{ message: string }> {
+    const reservation = await this.reservationModel.findById(reservationId);
+  
+    if (!reservation) {
+      throw new NotFoundException('Reserva no encontrada');
+    }
+  
+    if (reservation.userId !== userId) {
+      throw new UnauthorizedException('No tienes permiso para eliminar esta reserva');
+    }
+  
+    await reservation.deleteOne();
+    return { message: 'Reserva eliminada exitosamente' };
   }
 }

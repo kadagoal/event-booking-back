@@ -116,7 +116,7 @@ export class UsersService {
   async login(loginUserDto: LoginUserDto): Promise<any> {
     try {
       const secretHash = this.generateSecretHash(loginUserDto.email);
-
+  
       const response = await this.cognitoClient.send(
         new InitiateAuthCommand({
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
@@ -128,10 +128,13 @@ export class UsersService {
           },
         })
       );
-
+  
+      const user = await this.userModel.findOne({ email: loginUserDto.email });
+  
       return {
         message: 'Inicio de sesión exitoso.',
         tokens: response.AuthenticationResult,
+        role: user?.role,
       };
     } catch (error) {
       console.log(error);
@@ -146,5 +149,5 @@ export class UsersService {
       }
       throw new InternalServerErrorException('Error al iniciar sesión.');
     }
-  }
+  }  
 }
