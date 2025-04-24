@@ -4,6 +4,7 @@
 /build
 
 .env
+.DS_Store
 
 # Logs
 logs
